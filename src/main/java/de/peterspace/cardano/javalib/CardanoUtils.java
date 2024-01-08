@@ -15,10 +15,11 @@ import lombok.experimental.UtilityClass;
 public class CardanoUtils {
 
 	public static void main(String[] args) {
-		String addr = "addr1qx2k7ynqllfqv3uvnureg70n37h5kuavqryf20mvcm0v9kxahea9slntm5n8f06nlsynyf4m6sa0qd05agra0qgk09nqjm5fxn";
-		Bech32Data decoded = Bech32.decode(addr);
-		byte[] base8Data = Bech32.decode5to8(decoded.data);
-		System.out.println(Hex.encodeHexString(base8Data));
+		 String addr = "script1uychk9f04tqngfhx4qlqdlug5ntzen3uzc62kzj7cyesjk0d9me";
+		//String addr = "addr1v9gs0trlcmyty7jakcewjs3h00a7xrzyd5wnyfrpeg4wjts0ugx63";
+		 System.out.println(extractPaymentHash(addr));
+		;
+		System.out.println(extractPaymentHash(addr));
 	}
 
 	public static String stakeToHash(String stakeAddress) {
@@ -37,7 +38,10 @@ public class CardanoUtils {
 
 	public static String extractPaymentHash(String shellyAddress) {
 
-		if (determineAddressType(shellyAddress) != AddressType.SHELLY_ADDRESS) {
+		AddressType addressType = determineAddressType(shellyAddress);
+		if (addressType != AddressType.SHELLY_ADDRESS
+				&& addressType != AddressType.SERVICE_ADDRESS
+				&& addressType != AddressType.SCRIPT_ADDRESS) {
 			return shellyAddress;
 		}
 
@@ -46,7 +50,8 @@ public class CardanoUtils {
 
 		int keyLength = 28;
 		byte[] keyBytes = new byte[keyLength];
-		System.arraycopy(base8Data, 1, keyBytes, 0, keyLength);
+		int srcPos = addressType == AddressType.SCRIPT_ADDRESS ? 0 : 1;
+		System.arraycopy(base8Data, srcPos, keyBytes, 0, keyLength);
 
 		return Hex.encodeHexString(keyBytes);
 	}
@@ -79,7 +84,7 @@ public class CardanoUtils {
 	}
 
 	public static enum AddressType {
-		STAKE_ADDRESS, SERVICE_ADDRESS, SHELLY_ADDRESS
+		STAKE_ADDRESS, SERVICE_ADDRESS, SCRIPT_ADDRESS, SHELLY_ADDRESS
 	}
 
 	public static AddressType determineAddressType(String address) {
@@ -90,6 +95,8 @@ public class CardanoUtils {
 			return AddressType.SHELLY_ADDRESS;
 		} else if (address.startsWith("addr") && address.length() == 58) {
 			return AddressType.SERVICE_ADDRESS;
+		} else if (address.startsWith("script") && address.length() == 58) {
+			return AddressType.SCRIPT_ADDRESS;
 		} else {
 			throw new IllegalArgumentException(String.format("Cannot determin addresstype of %s", address));
 		}

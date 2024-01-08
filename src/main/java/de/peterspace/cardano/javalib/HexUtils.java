@@ -16,4 +16,8 @@ public class HexUtils {
 		}
 	}
 
+	public String stringToHexString(String string) {
+		return Hex.encodeHexString(string.getBytes());
+	}
+
 }
