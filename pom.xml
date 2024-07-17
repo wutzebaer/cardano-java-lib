@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.4</version>
+		<version>3.3.1</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>de.peterspace.cardano</groupId>
 	<artifactId>cardano-java-lib</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
-		<bitcoinj.version>0.17-alpha2</bitcoinj.version>
+		<bitcoinj.version>0.17-alpha4</bitcoinj.version>
 	</properties>
 	<dependencies>
 		<dependency>
