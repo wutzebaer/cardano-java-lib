@@ -1,45 +1,41 @@
 {
   "name": "Java",
-  "image": "mcr.microsoft.com/devcontainers/java:21-bookworm",
-  "forwardPorts": [8080],
+  "image": "mcr.microsoft.com/devcontainers/java:25-bookworm",
   "customizations": {
-    "vscode": {
-      "extensions": [
-        "vmware.vscode-boot-dev-pack",
-        "mhutchie.git-graph",
-        "esbenp.prettier-vscode",
-        "redhat.vscode-xml",
-        "eamodio.gitlens",
-        "/tmp/runonsave.vsix"
-      ],
-      "settings": {
-        "editor.formatOnSave": false,
-        "editor.codeActionsOnSave": {
-          "source.fixAll": "never",
-          "source.organizeImports": "never"
-        },
-        "emeraldwalk.runonsave": {
-          "commands": [
-            {
-              "cmd": "bash -ic 'mvnd spotless:apply'"
-            }
-          ]
-        },
-        "java.compile.nullAnalysis.mode": "disabled",
-        "java.configuration.updateBuildConfiguration": "automatic",
-        "java.debug.settings.hotCodeReplace": "never"
+      "vscode": {
+          "extensions": [
+              "vmware.vscode-boot-dev-pack",
+              "vscjava.vscode-java-test",
+              "mhutchie.git-graph",
+              "esbenp.prettier-vscode",
+              "natqe.reload",
+              "Gruntfuggly.todo-tree",
+              "ryuta46.multi-command",
+              "emeraldwalk.RunOnSave"
+          ],
+          "settings": {
+              "git.postCommitCommand": "none",
+              "editor.formatOnSave": false,
+              "emeraldwalk.runonsave": {
+                  "commands": [
+                      {
+                          "cmd": "bash -i -c 'mvnd spotless:apply'"
+                      }
+                  ]
+              },
+              "editor.codeActionsOnSave": {
+                  "source.fixAll": "never",
+                  "source.organizeImports": "never"
+              }
+          }
       }
-    }
   },
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-    "ghcr.io/devcontainers-extra/features/mvnd-sdkman:2": {}
+      "ghcr.io/devcontainers/features/docker-in-docker:4": {},
+      "ghcr.io/devcontainers-extra/features/mvnd-sdkman:2": {}
   },
-  "mounts": [
-    "type=volume,source=maven-cache,target=/home/vscode/.m2"
-  ],
   "containerEnv": {
-    "DISPLAY": "host.docker.internal:0"
+      "TESTCONTAINERS_HOST_OVERRIDE": "host.docker.internal"
   },
-  "postCreateCommand": "sudo chmod +x .devcontainer/*.sh; bash -i -c '.devcontainer/post-create.sh'"
+  "postCreateCommand": "find . -name \"*.sh\" -exec chmod +x {} \\; -exec git update-index --chmod=+x {} \\; && .devcontainer/post-create.sh"
 }
